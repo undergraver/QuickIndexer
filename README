@@ -1,0 +1,9 @@
+FileIndexer
+===========
+
+Utilities to perform searches on network shares, local computer (any searchable path). Web interface and standalone client included
+
+Similar to updatedb/locate from findutils but written in a portable and compatible way.
+
+Structure
+===========
