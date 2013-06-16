@@ -7,3 +7,7 @@ Similar to updatedb/locate from findutils but written in a portable and compatib
 
 Structure
 ===========
+ ./Indexer
+   - directory with the code to create/update the database
+ ./Querier
+   - directory with the code used for retrieving information from the dabatase
