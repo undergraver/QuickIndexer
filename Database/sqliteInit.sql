@@ -3,18 +3,18 @@ PRAGMA foreign_keys = ON;
 -- paths table; paths present here are scanned and indexed
 -- into the database
 
-CREATE TABLE IF NOT EXISTS paths (
+CREATE TABLE IF NOT EXISTS scanpaths (
     id INTEGER PRIMARY KEY ASC AUTOINCREMENT, 
-    scanpath TEXT,
+    path TEXT,
+    pathtype TEXT,
     username TEXT,
     password TEXT,
-    pathtype TEXT,
     globexclusion TEXT,
     regexexclusion TEXT
 );
 
 -- scan jobs table; a scan job is the operation of scanning
--- a path referref by the paths table
+-- a path referref by the scanpaths table
 
 CREATE TABLE IF NOT EXISTS scanjobs (
     id INTEGER PRIMARY KEY ASC AUTOINCREMENT,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS scanjobs (
     status TEXT,
     result TEXT,
     pathid INTEGER,
-    FOREIGN KEY(pathid) REFERENCES paths(id),
+    FOREIGN KEY(pathid) REFERENCES scanpaths(id),
     CHECK (status IN ("Working","Done") )
 );
 
@@ -38,8 +38,8 @@ CREATE TABLE IF NOT EXISTS files (
 
 -- trigger to delete all the jobs associated with a deleted path
 
-CREATE TRIGGER IF NOT EXISTS deletejobs_referring_deleted_paths
-AFTER DELETE ON paths
+CREATE TRIGGER IF NOT EXISTS deletejobs_referring_deleted_scanpaths
+AFTER DELETE ON scanpaths
 BEGIN
     DELETE FROM scanjobs WHERE pathid = OLD.id;
 END;
