@@ -1,16 +1,29 @@
 import os
+import sqlite3
 
-def storeFile(newpath):
-    print newpath
+class ScanPath:
+    def __init__(self,id=0,path='',pathtype='',username='',password='',globexclusion='',regexexclusion=''):
+        self.id=id
+        self.path=path
+        self.pathtype=pathtype
+        self.username=username
+        self.password=password
+        self.globexclusion=globexclusion
+        self.regexexclusion=regexexclusion
 
-def scanPath(path,config=None):
-    files = os.listdir()
-    for f in files:
-        newpath = path + os.sep + f
-        if os.path.isdir(newpath):
-            # go deeper recursively
-            scanPath(newpath,config)
-        else:
-            storeFile(newpath)
+def GetScanPaths(database):
+    connection = sqlite3.connect(database)
+    connection.row_factory = sqlite3.Row
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM scanpaths")
+    results = cursor.fetchall()
+
+    scanpaths=[]
+
+    for r in results:
+        scanpath = ScanPath(r['id'],r['path'],r['pathtype'],r['username'],r['password'],r['globexclusion'],r['regexexclusion'])
+        scanpaths.append(scanpath)
+
+    return scanpaths
 
 
