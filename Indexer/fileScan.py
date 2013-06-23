@@ -12,7 +12,10 @@ def scan(db,scanjobid,path):
 
         storeFile(db,scanjobid,newpath)
 
-        # TODO: Use filters and check check for symbolic links
+        if os.path.islink(newpath):
+            continue
+
+        # TODO: Use filters
 
         if os.path.isdir(newpath):
             # go deeper recursively
