@@ -14,9 +14,11 @@ class DBAccess:
 
     def InitSQLite(self):
         self.connection = sqlite3.connect(self.dbfile)
+        self.connection.isolation_level = None
         self.connection.row_factory = sqlite3.Row
         self.cursor = self.connection.cursor()
         self.ExecuteSQL('PRAGMA foreign_keys=ON')
+        self.ExecuteSQL('PRAGMA synchronous=NORMAL')
 
     def ExecuteSQL(self,query,parameters=[]):
         self.cursor.execute(query,parameters)
@@ -25,6 +27,5 @@ class DBAccess:
 
     def GetLastRowId(self):
         return self.cursor.lastrowid
-
 
 
