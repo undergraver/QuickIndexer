@@ -1,8 +1,17 @@
 import os
+import fileScan
 
-def DoScanJob(scanpath):
-    # NOTE: Store UTC time always in database
-    print "TODO: DoScanJob -> Not implemented"
+def DoScanJob(db,scanpath):
+    if scanpath.pathtype == 'file':
+        
+        results = db.ExecuteSQL("INSERT INTO scanjobs (startdate,status,scanpathid) VALUES(CURRENT_TIMESTAMP,'Working',?)",(scanpath.id,))
+
+        scanjobid=db.GetLastRowId()
+
+        errText="OK"
+        fileScan.scan(db,scanjobid,scanpath.path)
+        
+        db.ExecuteSQL("UPDATE scanjobs SET enddate=CURRENT_TIMESTAMP,status='Done',result=? WHERE id=?",(errText,scanjobid))
 
 
 

@@ -1,15 +1,21 @@
 # scans paths of type 'file' (file systems)
 
-def storeFile(newpath):
-    print newpath
+import os
 
-def scanPath(path,config=None):
-    files = os.listdir()
+def storeFile(db,scanjobid,path):
+    db.ExecuteSQL("INSERT INTO FILES (filepath,scanjobid) VALUES(?,?)",(path,scanjobid))
+
+def scan(db,scanjobid,path):
+    files = os.listdir(path)
     for f in files:
-        newpath = path + os.sep + f
+        newpath = os.path.join(path,f)
+
+        storeFile(db,scanjobid,newpath)
+
+        # TODO: Use filters and check check for symbolic links
+
         if os.path.isdir(newpath):
             # go deeper recursively
-            scanPath(newpath,config)
-        else:
-            storeFile(newpath)
+            scan(db,scanjobid,newpath)
+
 

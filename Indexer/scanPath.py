@@ -11,12 +11,8 @@ class ScanPath:
         self.globexclusion=globexclusion
         self.regexexclusion=regexexclusion
 
-def GetScanPaths(database):
-    connection = sqlite3.connect(database)
-    connection.row_factory = sqlite3.Row
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM scanpaths")
-    results = cursor.fetchall()
+def GetScanPaths(db):
+    results = db.ExecuteSQL("SELECT * FROM scanpaths")
 
     scanpaths=[]
 

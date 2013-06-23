@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS scanjobs (
     enddate DATE,
     status TEXT,
     result TEXT,
-    pathid INTEGER,
-    FOREIGN KEY(pathid) REFERENCES scanpaths(id),
+    scanpathid INTEGER,
+    FOREIGN KEY(scanpathid) REFERENCES scanpaths(id),
     CHECK (status IN ("Working","Done") )
 );
 
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS files (
 CREATE TRIGGER IF NOT EXISTS deletejobs_referring_deleted_scanpaths
 AFTER DELETE ON scanpaths
 BEGIN
-    DELETE FROM scanjobs WHERE pathid = OLD.id;
+    DELETE FROM scanjobs WHERE scanpathid = OLD.id;
 END;
 
 -- trigger to delete all the files associated with a deleted job
