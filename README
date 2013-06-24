@@ -1,7 +1,7 @@
 FileIndexer
 ===========
 
-Utilities to perform searches on network shares, local computer (any searchable path). Web interface and standalone client included
+Utilities to perform searches on local computer, network shares(smb) and any searchable path. Web interface and standalone client included
 
 Similar to updatedb/locate from findutils but written in a portable and compatible way.
 
@@ -11,3 +11,5 @@ Structure
    - directory with the code to create/update the database
  ./Querier
    - directory with the code used for retrieving information from the dabatase
+ ./Database
+   - directory with the code to create the database structure

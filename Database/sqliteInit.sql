@@ -4,13 +4,15 @@ PRAGMA foreign_keys = ON;
 -- into the database
 
 CREATE TABLE IF NOT EXISTS scanpaths (
-    id INTEGER PRIMARY KEY ASC AUTOINCREMENT, 
+    id INTEGER PRIMARY KEY ASC AUTOINCREMENT,
     path TEXT,
     pathtype TEXT,
     username TEXT,
     password TEXT,
-    globexclusion TEXT,
-    regexexclusion TEXT
+    globexclusion_name TEXT,
+    regexexclusion_name TEXT,
+    globexclusion_path TEXT,
+    regexexclusion_path TEXT
 );
 
 -- scan jobs table; a scan job is the operation of scanning
