@@ -11,7 +11,7 @@ def DoScanJob(db,scanpath):
         scanjobid=db.GetLastRowId()
 
         errText="OK"
-        fileScan.scan(db,scanjobid,scanpath.path)
+        fileScan.scan(db,scanjobid,scanpath)
         
         db.ExecuteSQL("UPDATE scanjobs SET enddate=CURRENT_TIMESTAMP,status='Done',result=? WHERE id=?",(errText,scanjobid))
 

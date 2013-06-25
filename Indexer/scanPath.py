@@ -2,14 +2,16 @@ import os
 import sqlite3
 
 class ScanPath:
-    def __init__(self,id=0,path='',pathtype='',username='',password='',globexclusion='',regexexclusion=''):
-        self.id=id
-        self.path=path
-        self.pathtype=pathtype
-        self.username=username
-        self.password=password
-        self.globexclusion=globexclusion
-        self.regexexclusion=regexexclusion
+    def __init__(self,keyval={}):
+        self.kv=keyval
+
+    def __getattr__(self,key):
+        print "__getattr__ %s" % (key)
+        return self.kv[key]
+
+    def getitem(self,key):
+        print "getitem %s" % (key)
+        return self.kv[key]
 
 def GetScanPaths(db):
     results = db.ExecuteSQL("SELECT * FROM scanpaths")
@@ -17,7 +19,7 @@ def GetScanPaths(db):
     scanpaths=[]
 
     for r in results:
-        scanpath = ScanPath(r['id'],r['path'],r['pathtype'],r['username'],r['password'],r['globexclusion'],r['regexexclusion'])
+        scanpath = ScanPath(r)
         scanpaths.append(scanpath)
 
     return scanpaths
