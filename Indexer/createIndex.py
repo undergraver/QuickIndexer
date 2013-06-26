@@ -11,7 +11,7 @@ import scanJob
 import Common
 
 if __name__=="__main__":
-    database = os.getenv('HOME') + "/.fileIndex.db"
+    database = Common.GetDefaultDbFile()
     db = Common.DBAccess(database)
     scanpaths = scanPath.GetScanPaths(db)
 

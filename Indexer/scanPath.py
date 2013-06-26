@@ -1,16 +1,14 @@
-import os
-import sqlite3
 
 class ScanPath:
     def __init__(self,keyval={}):
         self.kv=keyval
 
     def __getattr__(self,key):
-        print "__getattr__ %s" % (key)
+        #print "__getattr__ %s" % (key)
         return self.kv[key]
 
     def getitem(self,key):
-        print "getitem %s" % (key)
+        #print "getitem %s" % (key)
         return self.kv[key]
 
 def GetScanPaths(db):
