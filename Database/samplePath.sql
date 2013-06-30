@@ -1,1 +1,1 @@
-INSERT INTO scanpaths (path,pathtype) VALUES('/home/iulian','file');
+INSERT INTO scanpaths (path,pathtype) VALUES('/home','file');

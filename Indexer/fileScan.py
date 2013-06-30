@@ -4,7 +4,7 @@ import os
 import fileFilter
 
 def storeFile(db,scanjobid,path):
-    db.ExecuteSQL("INSERT INTO FILES (filepath,scanjobid) VALUES(?,?)",(path,scanjobid))
+    db.ExecuteSQLCommand("INSERT INTO FILES (filepath,scanjobid) VALUES(?,?)",(path,scanjobid))
 
 def scan(db,scanjobid,scanpath):
     path=scanpath.path

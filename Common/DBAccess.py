@@ -23,10 +23,17 @@ class DBAccess:
         self.ExecuteSQL('PRAGMA journal_mode=WAL')
         self.ExecuteSQL('PRAGMA ignore_check_constraints=off')
 
-    def ExecuteSQL(self,query,parameters=[]):
+    def ExecuteSQLCommand(self,query,parameters=[]):
         self.cursor.execute(query,parameters)
         # return the execution results
         return self.cursor.fetchall()
+
+    def ExecuteSQLScriptFile(self,filename):
+        sqlscript=open(filename,'r').read()
+        ExecuteSQLScript(sqlscript)
+
+    def ExecuteSQLScript(self,sqlscript):
+        self.cursor.executescript(sqlscript)
 
     def GetLastRowId(self):
         return self.cursor.lastrowid

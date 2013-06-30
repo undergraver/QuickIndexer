@@ -1,4 +1,3 @@
-
 class ScanPath:
     def __init__(self,keyval={}):
         self.kv=keyval
@@ -12,7 +11,7 @@ class ScanPath:
         return self.kv[key]
 
 def GetScanPaths(db):
-    results = db.ExecuteSQL("SELECT * FROM scanpaths")
+    results = db.ExecuteSQLCommand("SELECT * FROM scanpaths")
 
     scanpaths=[]
 
