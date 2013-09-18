@@ -12,6 +12,7 @@ import Common
 
 if __name__=="__main__":
     database = Common.GetDefaultDbFile()
+    #print database
     db = Common.DBAccess(database)
     scanpaths = scanPath.GetScanPaths(db)
 
