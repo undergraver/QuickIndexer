@@ -1,1 +1,1 @@
-INSERT INTO scanpaths (path,pathtype) VALUES('/home','file');
+INSERT INTO scanpaths (path,pathtype) VALUES('localhost/home/','smb');

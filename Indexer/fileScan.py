@@ -3,6 +3,8 @@
 import os
 import fileFilter
 
+#file:// + path
+
 def storeFile(db,scanjobid,path):
     db.ExecuteSQLCommand("INSERT INTO FILES (filepath,scanjobid) VALUES(?,?)",(path,scanjobid))
 
