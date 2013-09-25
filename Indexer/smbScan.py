@@ -21,14 +21,12 @@ class SMBUtility:
 
     def Connect(self):
         client_machine_name = socket.gethostname()
-        print client_machine_name
-        print self.computer
-        print self.username+'.'
-        print self.password+'.'
-        conn = SMBConnection(self.username,self.password,client_machine_name,self.computer)
+        # watch out:
+        # self.computer is unicode (must be converted to str)!
+        conn = SMBConnection(self.username,self.password,client_machine_name,str(self.computer))
 
         computerIp = socket.gethostbyname(self.computer)
-        print computerIp
+        #print computerIp
 
         conn.connect(computerIp,139)
 

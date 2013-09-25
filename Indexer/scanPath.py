@@ -4,6 +4,7 @@ class ScanPath:
 
     def __getattr__(self,key):
         #print "__getattr__ %s" % (key)
+        #print type(self.kv[key])
         return self.kv[key]
 
     def getitem(self,key):
