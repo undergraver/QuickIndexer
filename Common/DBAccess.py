@@ -38,4 +38,7 @@ class DBAccess:
     def GetLastRowId(self):
         return self.cursor.lastrowid
 
+    def StoreFile(self,scanjobid,path):
+        self.ExecuteSQLCommand("INSERT INTO FILES (filepath,scanjobid) VALUES(?,?)",(path,scanjobid))
+
 

@@ -5,9 +5,6 @@ import fileFilter
 
 #file:// + path
 
-def storeFile(db,scanjobid,path):
-    db.ExecuteSQLCommand("INSERT INTO FILES (filepath,scanjobid) VALUES(?,?)",(path,scanjobid))
-
 def scan(db,scanjobid,scanpath):
     path=scanpath.path
 
@@ -32,7 +29,7 @@ def scan_recursively(db,scanjobid,path,namefilter,pathfilter):
     for f in files:
         newpath = os.path.join(path,f)
 
-        storeFile(db,scanjobid,newpath)
+        db.StoreFile(scanjobid,newpath)
 
         if os.path.islink(newpath):
             continue

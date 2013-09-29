@@ -7,10 +7,14 @@
 # smb:// + path
 # where path=computername/share/path_in_share
 
+# example: smb://localhost/home/dan
+# means to scan the folder 'dan' of share 'home' on 'localhost'
+
 from smb.SMBConnection import SMBConnection
 from smb.base import SharedDevice
 from smb.base import SharedFile
 import socket
+import os
 
 class SMBUtility:
     def __init__(self,computer,username,password):
@@ -49,13 +53,14 @@ class SMBUtility:
     def ListPath(self,share,sharePath):
         lst = []
         try:
-            print share
-            print sharePath
+            #print share
+            #print sharePath
             if self.conn is None:
                 self.Connect()
             lst = self.conn.listPath(share,sharePath)
         except Exception as e:
-            print str(e)
+            #print str(e)
+            pass
 
         return lst
 
@@ -101,11 +106,32 @@ def scan(db,scanjobid,scanpath):
     # we always have a share path
     # in case we have more than a share the sharePath should be '/'
     for share in shareList:
-        scanShare(utility,share,sharePath)
+        scanShare(db,utility,scanjobid,share,sharePath)
 
-def scanShare(utility,share,sharePath):
+#
+# KNOWN ISSUES:
+#
+# LINKS ARE NOT DEFINED IN SMB SPECIFICATION AND THIS MAY LEAD
+# TO INFINITE RECURSION WHEN SCANNING SOME SAMBA SHARES
+#
+
+def scanShare(db,utility,scanjobid,share,sharePath):
     sharedFiles = utility.ListPath(share,sharePath)
     for f in sharedFiles:
-        print f.filename + "; " + str(f.file_attributes) + "; " + str(f.isDirectory)
 
+        if f.filename == "." or f.filename == "..":
+            continue
+
+
+        pathInShare = os.path.join(sharePath,f.filename)
+
+        completePath = os.path.join(utility.computer,share,pathInShare)
+
+        db.StoreFile(scanjobid,completePath)
+
+        if f.isDirectory:
+            print pathInShare
+            scanShare(db,utility,scanjobid,share,pathInShare)
+
+        #print f.filename + "; " + str(f.file_attributes) + "; " + str(f.isDirectory)
 
