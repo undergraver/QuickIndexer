@@ -112,26 +112,26 @@ def scan(db,scanjobid,scanpath):
 # KNOWN ISSUES:
 #
 # LINKS ARE NOT DEFINED IN SMB SPECIFICATION AND THIS MAY LEAD
-# TO INFINITE RECURSION WHEN SCANNING SOME SAMBA SHARES
+# TO INFINITE RECURSION WHEN SCANNING SAMBA SHARES WITH LINKS
+# TO PREVIOUSLY SCANNED FOLDERS
 #
 
 def scanShare(db,utility,scanjobid,share,sharePath):
     sharedFiles = utility.ListPath(share,sharePath)
     for f in sharedFiles:
 
-        if f.filename == "." or f.filename == "..":
+        fileName = f.filename
+        # ignore current (.) and previous directory (..)
+        if fileName == "." or fileName == "..":
             continue
 
-
-        pathInShare = os.path.join(sharePath,f.filename)
+        pathInShare = os.path.join(sharePath,fileName)
 
         completePath = os.path.join(utility.computer,share,pathInShare)
 
         db.StoreFile(scanjobid,completePath)
 
         if f.isDirectory:
-            print pathInShare
+            #print pathInShare
             scanShare(db,utility,scanjobid,share,pathInShare)
-
-        #print f.filename + "; " + str(f.file_attributes) + "; " + str(f.isDirectory)
 
