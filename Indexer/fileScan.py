@@ -2,20 +2,14 @@
 
 import os
 import fileFilter
+import common
 
 #file:// + path
 
 def scan(db,scanjobid,scanpath):
     path=scanpath.path
 
-    glob_name = scanpath.globexclusion_name.split('\r')
-    regex_name = scanpath.regexexclusion_name.split('\r')
-    namefilter=fileFilter.createFilter(glob_name,regex_name)
-
-    glob_path = scanpath.globexclusion_path.split('\r')
-    regex_path = scanpath.regexexclusion_path.split('\r')
-
-    pathfilter=fileFilter.createFilter(glob_path,regex_path)
+    namefilter,pathfilter = common.createFiltersForScanpath(scanpath)
 
     scan_recursively(db,scanjobid,path,namefilter,pathfilter)
 
@@ -34,11 +28,11 @@ def scan_recursively(db,scanjobid,path,namefilter,pathfilter):
         if os.path.islink(newpath):
             continue
 
-        if namefilter != None and namefilter.IsMatching(f):
+        if namefilter.IsMatching(f):
             # name found in name exclusion filter
             continue
 
-        if pathfilter != None and pathfilter.IsMatching(newpath):
+        if pathfilter.IsMatching(newpath):
             # path found in path exclusion filter
             continue
 

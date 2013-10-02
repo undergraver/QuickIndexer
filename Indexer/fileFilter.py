@@ -6,6 +6,11 @@ class FileFilter:
         self.regex=regex
 
     def IsMatching(self,fileStr):
+
+        if self.regex is None:
+            # no regex to match; return False (no match)
+            return False
+
         m = self.regex.match(fileStr)
         return ( None != m )
 
@@ -27,7 +32,7 @@ def createFilter(globExclusionPatterns,regexExclusionPatterns):
         allInOneRegex += '(' + regexPattern + ')'
 
     if len(allInOneRegex) == 0:
-        return None
+        return FileFilter(None)
 
     # this should be compiled to be faster
     reObj = re.compile(allInOneRegex)

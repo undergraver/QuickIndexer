@@ -15,6 +15,7 @@ from smb.base import SharedDevice
 from smb.base import SharedFile
 import socket
 import os
+import common
 
 class SMBUtility:
     def __init__(self,computer,username,password):
@@ -67,6 +68,8 @@ class SMBUtility:
 def scan(db,scanjobid,scanpath):
     path=scanpath.path
 
+    namefilter,pathfilter = common.createFiltersForScanpath(scanpath)
+
     computerName = ''
     shareName = ''
     sharePath = ''
@@ -106,7 +109,7 @@ def scan(db,scanjobid,scanpath):
     # we always have a share path
     # in case we have more than a share the sharePath should be '/'
     for share in shareList:
-        scanShare(db,utility,scanjobid,share,sharePath)
+        scanShare(db,utility,scanjobid,share,sharePath,namefilter,pathfilter)
 
 #
 # KNOWN ISSUES:
@@ -116,7 +119,7 @@ def scan(db,scanjobid,scanpath):
 # TO PREVIOUSLY SCANNED FOLDERS
 #
 
-def scanShare(db,utility,scanjobid,share,sharePath):
+def scanShare(db,utility,scanjobid,share,sharePath,namefilter,pathfilter):
     sharedFiles = utility.ListPath(share,sharePath)
     for f in sharedFiles:
 
@@ -131,7 +134,13 @@ def scanShare(db,utility,scanjobid,share,sharePath):
 
         db.StoreFile(scanjobid,completePath)
 
+        if namefilter.IsMatching(fileName):
+            continue
+
+        if pathfilter.IsMatching(completePath):
+            continue
+
         if f.isDirectory:
             #print pathInShare
-            scanShare(db,utility,scanjobid,share,pathInShare)
+            scanShare(db,utility,scanjobid,share,pathInShare,namefilter,pathfilter)
 
