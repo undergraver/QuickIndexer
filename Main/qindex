@@ -1,0 +1,95 @@
+#!/usr/bin/env python
+
+import argparse
+import sys
+
+#
+# See: http://stackoverflow.com/questions/7498595/python-argparse-add-argument-to-multiple-subparsers
+# in order to create a parent parser
+
+def CommonEditAddParser(forAdd):
+
+    commonEditParser = argparse.ArgumentParser(add_help=False)
+
+    commonEditParser.add_argument("--path",required=forAdd,help="the path to scan")
+    commonEditParser.add_argument("--type",required=False,default='file',choices=['file','smb','ftp'],help="the type of path")
+    commonEditParser.add_argument("--user",required=False,help="the user needed to log on")
+    commonEditParser.add_argument("--password",required=False,help="the password needed to log on")
+    commonEditParser.add_argument("--exclude-name-glob",required=False,action='append',help="exclusion name pattern as glob")
+    commonEditParser.add_argument("--exclude-name-regex",required=False,action='append',help="exclusion name pattern as regex")
+    commonEditParser.add_argument("--exclude-path-glob",required=False,action='append',help="exclusion path pattern as glob")
+    commonEditParser.add_argument("--exclude-path-regex",required=False,action='append',help="exclusion path pattern as regex")
+
+    return commonEditParser
+
+
+def DoMain():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers()
+    
+    # (re)create the database 
+    createparser = subparsers.add_parser('create')
+    createparser.add_argument("-f","--file",required=False,help="the database file name to be created")
+    
+    # update the database
+    updateparser = subparsers.add_parser('update')
+    updateparser.add_argument("-q","--quiet",action='store_true',required=False,help="be quiet; do not display messages")
+    
+    configparser = subparsers.add_parser("config")
+    
+
+
+    subconfig = configparser.add_subparsers()
+    addparser = subconfig.add_parser("add",parents=[CommonEditAddParser(True)])
+
+    commonSelectParser = argparse.ArgumentParser(add_help=False)
+    commonSelectParser.add_argument("-a","--all",required=False,action='store_true',help="all paths to scan")
+    commonSelectParser.add_argument("-i","--index",required=False,type=int,help="path with specified index")
+
+    viewparser = subconfig.add_parser("view",parents=[commonSelectParser])
+    viewparser.set_defaults(func=DoConfigView)
+
+    editparser = subconfig.add_parser("edit",parents=[CommonEditAddParser(False)])
+    editparser.add_argument("-i","--index",required=True,type=int,help="the index of the path to be edited")
+    editparser.set_defaults(func=DoConfigEdit)
+
+    deleteparser = subconfig.add_parser("delete",parents=[commonSelectParser])
+    deleteparser.set_defaults(func=DoConfigDelete)
+    
+    searchparser = subparsers.add_parser("search")
+    searchparser.add_argument("--glob",required=False,action='append',help="the glob pattern to match",metavar="glob")
+    searchparser.add_argument("--regex",required=False,action='append',help="the regex pattern to match")
+    searchparser.set_defaults(func=DoSearch)
+
+    print parser.parse_args()
+
+def DoDatabaseCreate(args):
+    print "DoDatabaseCreate:"
+    print args
+
+def DoDatabaseUpdate(args):
+    print "DoDatabaseUpdate:"
+    print args
+    
+def DoConfigAdd(args):
+    print "DoConfigAdd"
+    print args
+    
+def DoConfigView(args):
+    print "DoConfigView"
+    print args
+    
+def DoConfigEdit(args):
+    print "DoConfigEdit"
+    print args
+
+def DoConfigDelete(args):
+    print "DoConfigDelete"
+    print args
+
+def DoSearch(args):
+    print "DoSearch"
+    print args
+
+if __name__=="__main__":
+    DoMain()
