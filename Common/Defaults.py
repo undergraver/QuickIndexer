@@ -6,4 +6,5 @@ def GetDefaultDbFile():
     """
     database = os.getenv('HOME') + "/.fileIndex.db"
     return database
-    
+
+

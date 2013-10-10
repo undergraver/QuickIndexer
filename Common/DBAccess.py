@@ -30,7 +30,7 @@ class DBAccess:
 
     def ExecuteSQLScriptFile(self,filename):
         sqlscript=open(filename,'r').read()
-        ExecuteSQLScript(sqlscript)
+        self.ExecuteSQLScript(sqlscript)
 
     def ExecuteSQLScript(self,sqlscript):
         self.cursor.executescript(sqlscript)
