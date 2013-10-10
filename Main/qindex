@@ -2,25 +2,29 @@
 
 import argparse
 import sys
+import os
 
-#
-# See: http://stackoverflow.com/questions/7498595/python-argparse-add-argument-to-multiple-subparsers
-# in order to create a parent parser
+thisdir=os.path.abspath(os.path.dirname(__file__))
+sys.path.append(os.path.dirname(thisdir))
 
 def CommonEditAddParser(forAdd):
 
-    commonEditParser = argparse.ArgumentParser(add_help=False)
+    parser = argparse.ArgumentParser(add_help=False)
 
-    commonEditParser.add_argument("--path",required=forAdd,help="the path to scan")
-    commonEditParser.add_argument("--type",required=False,default='file',choices=['file','smb','ftp'],help="the type of path")
-    commonEditParser.add_argument("--user",required=False,help="the user needed to log on")
-    commonEditParser.add_argument("--password",required=False,help="the password needed to log on")
-    commonEditParser.add_argument("--exclude-name-glob",required=False,action='append',help="exclusion name pattern as glob")
-    commonEditParser.add_argument("--exclude-name-regex",required=False,action='append',help="exclusion name pattern as regex")
-    commonEditParser.add_argument("--exclude-path-glob",required=False,action='append',help="exclusion path pattern as glob")
-    commonEditParser.add_argument("--exclude-path-regex",required=False,action='append',help="exclusion path pattern as regex")
+    parser.add_argument("--path",required=forAdd,help="the path to scan")
+    parser.add_argument("--type",required=False,default='file' if forAdd else None,choices=['file','smb','ftp'],help="the type of path")
+    parser.add_argument("--user",required=False,help="the user needed to log on")
+    parser.add_argument("--password",required=False,help="the password needed to log on")
+    parser.add_argument("--exclude-name-glob",required=False,action='append',help="exclusion name pattern as glob")
+    parser.add_argument("--exclude-name-regex",required=False,action='append',help="exclusion name pattern as regex")
+    parser.add_argument("--exclude-path-glob",required=False,action='append',help="exclusion path pattern as glob")
+    parser.add_argument("--exclude-path-regex",required=False,action='append',help="exclusion path pattern as regex")
 
-    return commonEditParser
+    if not forAdd:
+        parser.add_argument("--delete-exclude-name-glob",required=False,help="reset the exclude name glob",action='store_true')
+        parser.add_argument("--delete-exclude-name-regex",required=False,help="reset the exclude name regex",action='store_true')
+
+    return parser
 
 
 def DoMain():
@@ -30,14 +34,13 @@ def DoMain():
     # (re)create the database 
     createparser = subparsers.add_parser('create')
     createparser.add_argument("-f","--file",required=False,help="the database file name to be created")
+    createparser.set_defaults(func=DoDatabaseCreate)
     
     # update the database
     updateparser = subparsers.add_parser('update')
     updateparser.add_argument("-q","--quiet",action='store_true',required=False,help="be quiet; do not display messages")
     
     configparser = subparsers.add_parser("config")
-    
-
 
     subconfig = configparser.add_subparsers()
     addparser = subconfig.add_parser("add",parents=[CommonEditAddParser(True)])
@@ -61,11 +64,13 @@ def DoMain():
     searchparser.add_argument("--regex",required=False,action='append',help="the regex pattern to match")
     searchparser.set_defaults(func=DoSearch)
 
-    print parser.parse_args()
+    result = parser.parse_args()
+
+    result.func(result)
 
 def DoDatabaseCreate(args):
-    print "DoDatabaseCreate:"
-    print args
+    import Database
+    Database.CreateDatabase(args.file)
 
 def DoDatabaseUpdate(args):
     print "DoDatabaseUpdate:"
@@ -93,3 +98,4 @@ def DoSearch(args):
 
 if __name__=="__main__":
     DoMain()
+
