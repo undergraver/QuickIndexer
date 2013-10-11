@@ -32,18 +32,22 @@ def DoMain():
     subparsers = parser.add_subparsers()
     
     # (re)create the database 
-    createparser = subparsers.add_parser('create')
-    createparser.add_argument("-f","--file",required=False,help="the database file name to be created")
+    commonFileParser = argparse.ArgumentParser(add_help=False)
+    commonFileParser.add_argument("-f","--file",required=False,help="the database file name")
+
+    createparser = subparsers.add_parser('create',parents=[commonFileParser])
+
     createparser.set_defaults(func=DoDatabaseCreate)
     
     # update the database
-    updateparser = subparsers.add_parser('update')
+    updateparser = subparsers.add_parser('update',parents=[commonFileParser])
     updateparser.add_argument("-q","--quiet",action='store_true',required=False,help="be quiet; do not display messages")
     
-    configparser = subparsers.add_parser("config")
+    configparser = subparsers.add_parser("config",parents=[commonFileParser])
 
     subconfig = configparser.add_subparsers()
     addparser = subconfig.add_parser("add",parents=[CommonEditAddParser(True)])
+    addparser.set_defaults(func=DoConfigAdd)
 
     commonSelectParser = argparse.ArgumentParser(add_help=False)
     commonSelectParser.add_argument("-a","--all",required=False,action='store_true',help="all paths to scan")
@@ -59,7 +63,7 @@ def DoMain():
     deleteparser = subconfig.add_parser("delete",parents=[commonSelectParser])
     deleteparser.set_defaults(func=DoConfigDelete)
     
-    searchparser = subparsers.add_parser("search")
+    searchparser = subparsers.add_parser("search",parents=[commonFileParser])
     searchparser.add_argument("--glob",required=False,action='append',help="the glob pattern to match",metavar="glob")
     searchparser.add_argument("--regex",required=False,action='append',help="the regex pattern to match")
     searchparser.set_defaults(func=DoSearch)
@@ -75,7 +79,7 @@ def DoDatabaseCreate(args):
 def DoDatabaseUpdate(args):
     print "DoDatabaseUpdate:"
     print args
-    
+
 def DoConfigAdd(args):
     print "DoConfigAdd"
     print args
