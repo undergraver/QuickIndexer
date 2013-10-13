@@ -2,14 +2,14 @@
 
 import os
 import fileFilter
-import common
+from Common import *
 
 #file:// + path
 
 def scan(db,scanjobid,scanpath):
     path=scanpath.path
 
-    namefilter,pathfilter = common.createFiltersForScanpath(scanpath)
+    namefilter,pathfilter = CreateFiltersForScanpath(scanpath)
 
     scan_recursively(db,scanjobid,path,namefilter,pathfilter)
 

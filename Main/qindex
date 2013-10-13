@@ -81,13 +81,24 @@ def DoDatabaseUpdate(args):
     print args
 
 def DoConfigAdd(args):
-    print "DoConfigAdd"
-    print args
+    import Config
+    Config.AddScanPath(args.file,
+                    args.path,args.type,
+                    args.user,args.password,
+                    args.exclude_name_glob,args.exclude_name_regex,
+                    args.exclude_path_glob,args.exclude_path_regex
+                )
     
 def DoConfigView(args):
-    print "DoConfigView"
     print args
-    
+
+    pathId = None
+    if args.all == False and args.index != None:
+        pathId = args.index
+
+    import Config
+    Config.GetScanPaths(args.file,pathId)
+
 def DoConfigEdit(args):
     print "DoConfigEdit"
     print args

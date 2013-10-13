@@ -41,4 +41,45 @@ class DBAccess:
     def StoreFile(self,scanjobid,path):
         self.ExecuteSQLCommand("INSERT INTO FILES (filepath,scanjobid) VALUES(?,?)",(path,scanjobid))
 
+    def AddScanPath(self,path,pathType,user,password,excNameGlob,excNameRegex,excPathGlob,excPathRegex):
+        if pathType is None:
+            pathType = GetDefaultPathType()
+
+        if user is None:
+            user = ''
+
+        if password is None:
+            password = ''
+
+        if excNameGlob is None:
+            excNameGlob = []
+
+        if excNameRegex is None:
+            excNameRegex = []
+
+        if excPathGlob is None:
+            excPathGlob = []
+
+        if excPathRegex is None:
+            excPathRegex = []
+
+        excNameGlobDb = '\r'.join(excNameGlob)
+        excNameRegexDb = '\r'.join(excNameRegex)
+
+        excPathGlobDb = '\r'.join(excPathGlob)
+        excPathRegexDb = '\r'.join(excPathRegex)
+
+        self.ExecuteSQLCommand("INSERT INTO scanpaths (path,pathtype,username,password,globexclusion_name,regexexclusion_name,globexclusion_path,regexexclusion_path) VALUES(?,?,?,?,?,?,?,?)",(path,pathType,user,password,excNameGlobDb,excNameRegexDb,excPathGlobDb,excPathRegexDb))
+
+    def GetScanPaths(self,pathId=None):
+        if pathId is None:
+            return self.GetAllScanPaths()
+
+        return self.GetPathWithId(pathId)
+
+    def GetAllScanPaths(self):
+        return self.ExecuteSQLCommand("SELECT * FROM scanpaths")
+    
+    def GetPathWithId(self,pathId):
+        return self.ExecuteSQLCommand("SELECT * FROM scanpaths WHERE id=?",(pathId,))
 

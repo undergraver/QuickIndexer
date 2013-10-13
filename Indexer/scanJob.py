@@ -1,6 +1,7 @@
 import os
 import fileScan
 import smbScan
+import Common
 
 def DoScanJob(db,scanpath):
 
@@ -19,8 +20,5 @@ def DoScanJob(db,scanpath):
     db.ExecuteSQLCommand("UPDATE scanjobs SET enddate=CURRENT_TIMESTAMP,status='Done',result=? WHERE id=?",(errText,scanjobid))
 
     db.ExecuteSQLCommand('END')
-
-        
-
 
 

@@ -14,7 +14,7 @@ class FileFilter:
         m = self.regex.match(fileStr)
         return ( None != m )
 
-def createFilter(globExclusionPatterns,regexExclusionPatterns):
+def CreateFilter(globExclusionPatterns,regexExclusionPatterns):
 
     allInOneRegex=''
 

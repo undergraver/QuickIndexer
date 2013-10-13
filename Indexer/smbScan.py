@@ -15,7 +15,7 @@ from smb.base import SharedDevice
 from smb.base import SharedFile
 import socket
 import os
-import common
+from Common import *
 
 class SMBUtility:
     def __init__(self,computer,username,password):
@@ -68,7 +68,7 @@ class SMBUtility:
 def scan(db,scanjobid,scanpath):
     path=scanpath.path
 
-    namefilter,pathfilter = common.createFiltersForScanpath(scanpath)
+    namefilter,pathfilter = CreateFiltersForScanpath(scanpath)
 
     computerName = ''
     shareName = ''

@@ -8,3 +8,9 @@ def GetDefaultDbFile():
     return database
 
 
+def GetDefaultPathType():
+    """
+    The default path type is "file"
+    Example: file:///home/myuser/Desktop/
+    """
+    return "file"
