@@ -41,3 +41,7 @@ def ShowScanPaths(fileName,pathId):
 
     print buf
 
+def DeleteScanPaths(fileName,pathId):
+    db = GetDbAccessHandle(fileName)
+    db.RemoveScanPaths(pathId)
+

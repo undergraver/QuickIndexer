@@ -102,8 +102,18 @@ def DoConfigEdit(args):
     print args
 
 def DoConfigDelete(args):
-    print "DoConfigDelete"
     print args
+
+    if args.all == False and args.index is None:
+        print "Nothing to delete specified"
+        return
+
+    pathId = None
+    if args.all == False and not args.index is None:
+        pathId = args.index
+
+    import Config
+    Config.DeleteScanPaths(args.file,pathId)
 
 def DoSearch(args):
     print "DoSearch"

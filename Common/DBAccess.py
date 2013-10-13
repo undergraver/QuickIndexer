@@ -83,3 +83,9 @@ class DBAccess:
     def GetPathWithId(self,pathId):
         return self.ExecuteSQLCommand("SELECT * FROM scanpaths WHERE id=?",(pathId,))
 
+    def RemoveScanPaths(self,pathId):
+        if pathId is None:
+            self.ExecuteSQLCommand("DELETE FROM scanpaths")
+        else:
+            self.ExecuteSQLCommand("DELETE FROM scanpaths WHERE id=?",(pathId,))
+
