@@ -90,14 +90,12 @@ def DoConfigAdd(args):
                 )
     
 def DoConfigView(args):
-    print args
-
     pathId = None
     if args.all == False and args.index != None:
         pathId = args.index
 
     import Config
-    Config.GetScanPaths(args.file,pathId)
+    Config.ShowScanPaths(args.file,pathId)
 
 def DoConfigEdit(args):
     print "DoConfigEdit"
