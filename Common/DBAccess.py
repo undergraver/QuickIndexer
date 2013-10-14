@@ -1,4 +1,5 @@
 import sqlite3
+from ScanPath import *
 
 class DBAccess:
     def __init__(self,dbfile):
@@ -73,14 +74,16 @@ class DBAccess:
 
     def GetScanPaths(self,pathId=None):
         if pathId is None:
-            return self.GetAllScanPaths()
+            sqlRows = self.GetAllScanPathsRows()
+        else:
+            sqlRows = self.GetPathWithIdRow(pathId)
 
-        return self.GetPathWithId(pathId)
+        return [ScanPath(sqlRow) for sqlRow in sqlRows]
 
-    def GetAllScanPaths(self):
+    def GetAllScanPathsRows(self):
         return self.ExecuteSQLCommand("SELECT * FROM scanpaths")
     
-    def GetPathWithId(self,pathId):
+    def GetPathWithIdRow(self,pathId):
         return self.ExecuteSQLCommand("SELECT * FROM scanpaths WHERE id=?",(pathId,))
 
     def RemoveScanPaths(self,pathId):
@@ -88,4 +91,7 @@ class DBAccess:
             self.ExecuteSQLCommand("DELETE FROM scanpaths")
         else:
             self.ExecuteSQLCommand("DELETE FROM scanpaths WHERE id=?",(pathId,))
+
+    def UpdateScanPath(self,scanPath):
+        self.ExecuteSQLCommand('UPDATE scanpaths SET path=?, pathtype=?, username=?, password=?, globexclusion_name=?, regexexclusion_name=?, globexclusion_path=?, regexexclusion_path=? WHERE id=?', (scanPath.path, scanPath.pathtype, scanPath.username, scanPath.password, scanPath.globexclusion_name, scanPath.regexexclusion_name, scanPath.globexclusion_path, scanPath.regexexclusion_path, scanPath.id))
 

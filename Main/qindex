@@ -21,8 +21,10 @@ def CommonEditAddParser(forAdd):
     parser.add_argument("--exclude-path-regex",required=False,action='append',help="exclusion path pattern as regex")
 
     if not forAdd:
-        parser.add_argument("--delete-exclude-name-glob",required=False,help="reset the exclude name glob",action='store_true')
-        parser.add_argument("--delete-exclude-name-regex",required=False,help="reset the exclude name regex",action='store_true')
+        parser.add_argument("--delete-exclude-name-glob",required=False,help="reset the exclude name glob", action='store_true')
+        parser.add_argument("--delete-exclude-name-regex",required=False,help="reset the exclude name regex", action='store_true')
+        parser.add_argument("--delete-exclude-path-glob",required=False,help="reset the exclude path glob", action='store_true')
+        parser.add_argument("--delete-exclude-path-regex",required=False,help="reset the exclude path regex", action='store_true')
 
     return parser
 
@@ -98,12 +100,15 @@ def DoConfigView(args):
     Config.ShowScanPaths(args.file,pathId)
 
 def DoConfigEdit(args):
-    print "DoConfigEdit"
-    print args
+    import Config
+    Config.EditScanPath(args.file,args.index,
+                        args.path,args.type,args.user,args.password,
+                        args.delete_exclude_name_glob,args.exclude_name_glob,
+                        args.delete_exclude_name_regex,args.exclude_name_regex,
+                        args.delete_exclude_path_glob,args.exclude_path_glob,
+                        args.delete_exclude_path_regex,args.exclude_path_regex)
 
 def DoConfigDelete(args):
-    print args
-
     if args.all == False and args.index is None:
         print "Nothing to delete specified"
         return
