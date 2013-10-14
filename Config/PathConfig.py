@@ -24,7 +24,12 @@ def EditScanPath(fileName,index,path,pathType,user,password,
 
     db = GetDbAccessHandle(fileName)
     
-    scanpath = db.GetScanPaths(index)[0]
+    scanpaths = db.GetScanPaths(index)
+    if len(scanpaths) == 0:
+        print "No scanpath with id %s" % str(index)
+        return
+
+    scanpath = scanpaths[0]
 
     needUpdate=0
 
@@ -77,7 +82,7 @@ def EditScanPath(fileName,index,path,pathType,user,password,
     if exclude_path_glob is not None:
         needUpdate+=1
         toappend = '\r'.join(exclude_path_glob)
-        if len(path.globexclusion_path) > 0:
+        if len(scanpath.globexclusion_path) > 0:
             scanpath.globexclusion_path += '\r' + toappend
         else:
             scanpath.globexclusion_path = toappend
@@ -94,7 +99,7 @@ def EditScanPath(fileName,index,path,pathType,user,password,
         else:
             scanpath.regexexclusion_path = toappend
 
-    scanpath.Display()
+    #scanpath.Display()
 
     if needUpdate > 0:
         # only if update needed we update the scanpath information
