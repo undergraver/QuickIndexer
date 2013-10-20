@@ -1,7 +1,6 @@
 # scans paths of type 'file' (file systems)
 
 import os
-import fileFilter
 from Common import *
 
 #file:// + path

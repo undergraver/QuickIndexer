@@ -44,6 +44,7 @@ def DoMain():
     # update the database
     updateparser = subparsers.add_parser('update',parents=[commonFileParser])
     updateparser.add_argument("-q","--quiet",action='store_true',required=False,help="be quiet; do not display messages")
+    updateparser.set_defaults(func=DoDatabaseUpdate)
     
     configparser = subparsers.add_parser("config",parents=[commonFileParser])
 
@@ -79,8 +80,9 @@ def DoDatabaseCreate(args):
     Database.CreateDatabase(args.file)
 
 def DoDatabaseUpdate(args):
-    print "DoDatabaseUpdate:"
     print args
+    import Indexer
+    Indexer.UpdateDatabase(args.file,args.quiet)
 
 def DoConfigAdd(args):
     import Config
