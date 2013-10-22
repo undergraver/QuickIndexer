@@ -21,8 +21,7 @@ def scan_recursively(db,scanjobid,path,namefilter,pathfilter):
 
     for f in files:
         newpath = os.path.join(path,f)
-
-        db.StoreFile(scanjobid,newpath)
+	isDirectory = os.path.isdir(newpath)
 
         if os.path.islink(newpath):
             continue
@@ -35,7 +34,9 @@ def scan_recursively(db,scanjobid,path,namefilter,pathfilter):
             # path found in path exclusion filter
             continue
 
-        if os.path.isdir(newpath):
+        db.StoreFile(scanjobid,newpath)
+
+        if isDirectory:
             # go deeper recursively
             scan_recursively(db,scanjobid,newpath,namefilter,pathfilter)
 

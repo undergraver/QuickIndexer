@@ -7,6 +7,9 @@ def DoScanJob(db,scanpath):
 
     db.ExecuteSQLCommand('BEGIN')
 
+    # delete previous scanjobs containing the scanpath id
+    db.ExecuteSQLCommand("DELETE FROM scanjobs WHERE scanpathid=?",(scanpath.id,))
+
     results = db.ExecuteSQLCommand("INSERT INTO scanjobs (startdate,status,scanpathid) VALUES (CURRENT_TIMESTAMP,'Working',?)",(scanpath.id,))
 
     scanjobid=db.GetLastRowId()

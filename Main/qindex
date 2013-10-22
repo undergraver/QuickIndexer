@@ -80,7 +80,6 @@ def DoDatabaseCreate(args):
     Database.CreateDatabase(args.file)
 
 def DoDatabaseUpdate(args):
-    print args
     import Indexer
     Indexer.UpdateDatabase(args.file,args.quiet)
 

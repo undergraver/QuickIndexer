@@ -3,17 +3,14 @@
 import sys
 import os
 
-thisdir=os.path.abspath(os.path.dirname(__file__))
-sys.path.append(os.path.dirname(thisdir))
-
 import scanJob
 from Common import *
 
 def UpdateDatabase(dbFile=None,quiet=False):
     if dbFile is None:
-        dbFile = Common.GetDefaultDbFile()
+        dbFile = GetDefaultDbFile()
     #print database
-    db = Common.DBAccess(dbFile)
+    db = DBAccess(dbFile)
     scanpaths = db.GetScanPaths()
 
     for scanpath in scanpaths:
