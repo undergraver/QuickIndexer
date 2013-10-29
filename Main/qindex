@@ -67,8 +67,10 @@ def DoMain():
     deleteparser.set_defaults(func=DoConfigDelete)
     
     searchparser = subparsers.add_parser("search",parents=[commonFileParser])
-    searchparser.add_argument("--glob",required=False,action='append',help="the glob pattern to match",metavar="glob")
-    searchparser.add_argument("--regex",required=False,action='append',help="the regex pattern to match")
+    searchparser.add_argument("--glob",required=False,action='append',help="the glob pattern to match", metavar="glob")
+    searchparser.add_argument("--iglob",required=False,action='append',help="the glob pattern to match - case insensitive", metavar="iglob")
+    searchparser.add_argument("--regex",required=False,action='append',help="the regex pattern to match", metavar="regex")
+    searchparser.add_argument("--iregex",required=False,action='append',help="the regex pattern to match - case insensitive", metavar="iregex")
     searchparser.set_defaults(func=DoSearch)
 
     result = parser.parse_args()
