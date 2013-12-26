@@ -65,12 +65,10 @@ def DoMain():
 
     deleteparser = subconfig.add_parser("delete",parents=[commonSelectParser])
     deleteparser.set_defaults(func=DoConfigDelete)
-    
+
     searchparser = subparsers.add_parser("search",parents=[commonFileParser])
-    searchparser.add_argument("--glob",required=False,action='append',help="the glob pattern to match", metavar="glob")
-    searchparser.add_argument("--iglob",required=False,action='append',help="the glob pattern to match - case insensitive", metavar="iglob")
-    searchparser.add_argument("--regex",required=False,action='append',help="the regex pattern to match", metavar="regex")
-    searchparser.add_argument("--iregex",required=False,action='append',help="the regex pattern to match - case insensitive", metavar="iregex")
+    searchparser.add_argument("--type",required=False,default='glob',choices=['glob','iglob','regex','iregex'])
+    searchparser.add_argument("pattern",nargs='+')
     searchparser.set_defaults(func=DoSearch)
 
     result = parser.parse_args()
@@ -124,6 +122,8 @@ def DoConfigDelete(args):
     Config.DeleteScanPaths(args.file,pathId)
 
 def DoSearch(args):
+    #import Query
+    #Query.DoQuery(args.glob, args.iglob, args.regex, args.iregex)
     print "DoSearch"
     print args
 
