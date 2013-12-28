@@ -9,7 +9,7 @@ from Common import *
 def UpdateDatabase(dbFile=None,quiet=False):
     if dbFile is None:
         dbFile = GetDefaultDbFile()
-    #print database
+
     db = DBAccess(dbFile)
     scanpaths = db.GetScanPaths()
 

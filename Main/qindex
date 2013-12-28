@@ -67,8 +67,9 @@ def DoMain():
     deleteparser.set_defaults(func=DoConfigDelete)
 
     searchparser = subparsers.add_parser("search",parents=[commonFileParser])
-    searchparser.add_argument("--type",required=False,default='glob',choices=['glob','iglob','regex','iregex'])
-    searchparser.add_argument("pattern",nargs='+')
+    searchparser.add_argument("--type",required=False,default='glob',choices=['glob','iglob','like','regex','iregex'], help="the type of pattern (glob by default)")
+    searchparser.add_argument("pattern",nargs='+',help="the patterns to match")
+    searchparser.add_argument("--limit",required=False,type=int,help="the maximum number of results to return")
     searchparser.set_defaults(func=DoSearch)
 
     result = parser.parse_args()
@@ -122,10 +123,11 @@ def DoConfigDelete(args):
     Config.DeleteScanPaths(args.file,pathId)
 
 def DoSearch(args):
-    #import Query
-    #Query.DoQuery(args.glob, args.iglob, args.regex, args.iregex)
-    print "DoSearch"
-    print args
+    import Query
+    files = Query.Search(args.file, args.type, args.pattern, args.limit )
+
+    for file in files:
+        print file
 
 if __name__=="__main__":
     DoMain()
