@@ -8,41 +8,54 @@ def Search(dbFile, patternType, patterns, maxresults):
         dbFile = GetDefaultDbFile()
     db = DBAccess(dbFile)
 
+    # TODO: in case of maxresults also
+    # take care of the offset - see OFFSET from sql limit documentation
     if maxresults is None:
         maxresults = 0
 
-    if maxresults is None:
-        maxresults = 0
+    if len(patterns) == 0:
+        # nothing to search for
+        return []
 
     results = []
+    sql = "SELECT filepath from files WHERE "
 
-    for pattern in patterns:
-        tempresults = SearchPattern(db, patternType, pattern, maxresults)
-        results += tempresults;
-        if maxresults > 0:
-            maxresults -= len(results)
-            if maxresults <= 0:
-                # done obtaining the limited results
-                break
+    patternCount = len(patterns)
 
-    return results
+    for i in range(patternCount):
 
+        pattern = patterns[i]
+        patternCondition = SQLPatternCondition(patternType, pattern, 'filepath')
+        sql += patternCondition
 
-def SearchPattern(db, patternType, pattern, maxresults):
+        last = (i+1 == patternCount)
+        if not last:
+            sql += " OR "
 
-    sqlAppendLimit = ""
     if maxresults > 0:
-        sqlAppendLimit = " LIMIT %d" % (maxresults)
+        sql += " LIMIT %d" % (maxresults)
+
+    #print sql
+    results = db.ExecuteSQLCommand(sql)
+
+    return [row['filepath'] for row in results]
 
 
-    sql = ""
+def SQLPatternCondition(patternType, pattern, columnName):
+
     if patternType == 'glob':
-        sql = "SELECT filepath from files WHERE filepath GLOB '%s'" % pattern
+        return "%s GLOB '%s'" % (columnName, pattern)
     elif patternType == 'iglob':
-        # TODO: transform to "like" * -> %, ? -> _
-        raise Exception("Not implemented")
+        # keep existing _ ; ( _ -> \_ )
+        # keep existing % ; ( % -> \% )
+        # transform to "like" ( * -> % ) and ( ? -> _ )
+        likepattern = pattern.replace('_','\_')
+        likepattern = likepattern.replace('%','\%')
+        likepattern = likepattern.replace('*','%')
+        likepattern = likepattern.replace('?','_')
+        return "%s LIKE '%s' ESCAPE '\\'" % (columnName, likepattern)
     elif patternType == 'like':
-        sql = "SELECT filepath from files WHERE filepath LIKE '%s'" % pattern
+        return "%s LIKE '%s' ESCAPE '\\'" % (columnName, pattern)
     elif patternType == 'regex':
         raise Exception("Not implemented")
     elif patternType == "iregex":
@@ -50,8 +63,3 @@ def SearchPattern(db, patternType, pattern, maxresults):
     else:
         raise Exception("Unknown pattern type:"+patternType)
 
-    sql += sqlAppendLimit
-
-    results = db.ExecuteSQLCommand(sql)
-
-    return [row['filepath'] for row in results]
