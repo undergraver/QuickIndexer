@@ -49,7 +49,9 @@ def SQLPatternCondition(patternType, pattern, columnName):
         # keep existing _ ; ( _ -> \_ )
         # keep existing % ; ( % -> \% )
         # transform to "like" ( * -> % ) and ( ? -> _ )
-        likepattern = pattern.replace('_','\_')
+        likepattern = pattern
+        likepattern = likepattern.replace('\\','\\\\')
+        likepattern = likepattern.replace('_','\_')
         likepattern = likepattern.replace('%','\%')
         likepattern = likepattern.replace('*','%')
         likepattern = likepattern.replace('?','_')
@@ -57,9 +59,11 @@ def SQLPatternCondition(patternType, pattern, columnName):
     elif patternType == 'like':
         return "%s LIKE '%s' ESCAPE '\\'" % (columnName, pattern)
     elif patternType == 'regex':
-        raise Exception("Not implemented")
+        # use REGEXP for case sensitive
+        return "%s REGEXP '%s'" % (columnName, pattern)
     elif patternType == "iregex":
-        raise Exception("Not implemented")
+        # use MATCH for case insensitive
+        return "%s MATCH '%s'" % (columnName, pattern)
     else:
         raise Exception("Unknown pattern type:"+patternType)
 

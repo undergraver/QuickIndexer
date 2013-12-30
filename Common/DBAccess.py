@@ -1,5 +1,14 @@
 import sqlite3
+import re
 from ScanPath import *
+
+def insensitive_regex_match(expr, item):
+    reg = re.compile(expr, re.I)
+    return reg.search(item) is not None
+
+def sensitive_regex_match(expr, item):
+    reg = re.compile(expr)
+    return reg.search(item) is not None
 
 class DBAccess:
     def __init__(self,dbfile):
@@ -23,6 +32,11 @@ class DBAccess:
         self.ExecuteSQLCommand('PRAGMA synchronous=NORMAL')
         self.ExecuteSQLCommand('PRAGMA journal_mode=WAL')
         self.ExecuteSQLCommand('PRAGMA ignore_check_constraints=off')
+
+        # regexp matches case sensitive
+        self.connection.create_function("REGEXP", 2, sensitive_regex_match)
+        # match matches case insensitive
+        self.connection.create_function("MATCH", 2, insensitive_regex_match)
 
     def ExecuteSQLCommand(self,query,parameters=[]):
         self.cursor.execute(query,parameters)
