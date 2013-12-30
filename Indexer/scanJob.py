@@ -1,9 +1,7 @@
 import os
-import fileScan
-import smbScan
 import Common
 
-def DoScanJob(db,scanpath):
+def DoScanJob(db, scanpath):
 
     db.ExecuteSQLCommand('BEGIN')
 
@@ -16,8 +14,10 @@ def DoScanJob(db,scanpath):
     errText="OK"
 
     if scanpath.pathtype == 'file':
+        import fileScan
         fileScan.scan(db,scanjobid,scanpath)
     if scanpath.pathtype == 'smb':
+        import smbScan
         smbScan.scan(db,scanjobid,scanpath)
 
     db.ExecuteSQLCommand("UPDATE scanjobs SET enddate=CURRENT_TIMESTAMP,status='Done',result=? WHERE id=?",(errText,scanjobid))
