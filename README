@@ -7,9 +7,15 @@ Similar to updatedb/locate from findutils but written in a portable and compatib
 
 Structure
 ===========
+ ./Common
+   - shared functionality between modules
+ ./Config
+   - module with the configuration options
+ ./Database
+   - module responsible with the databse and related operations
  ./Indexer
    - directory with the code to create/update the database
- ./Querier
+ ./Main
+   - the place where the application launcher is found
+ ./Query
    - directory with the code used for retrieving information from the dabatase
- ./Database
-   - directory with the code to create the database structure
