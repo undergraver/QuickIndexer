@@ -3,13 +3,11 @@ import sys
 
 from Common import *
 
-def Search(dbFile, patternType, patterns, maxresults):
+def Search(dbFile, patternType, patterns, maxresults, offset, operation):
     if dbFile is None:
         dbFile = GetDefaultDbFile()
     db = DBAccess(dbFile)
 
-    # TODO: in case of maxresults also
-    # take care of the offset - see OFFSET from sql limit documentation
     if maxresults is None:
         maxresults = 0
 
@@ -30,10 +28,10 @@ def Search(dbFile, patternType, patterns, maxresults):
 
         last = (i+1 == patternCount)
         if not last:
-            sql += " OR "
+            sql += " " + operation + " "
 
     if maxresults > 0:
-        sql += " LIMIT %d" % (maxresults)
+        sql += " LIMIT %d OFFSET %d" % (maxresults, offset)
 
     #print sql
     results = db.ExecuteSQLCommand(sql)

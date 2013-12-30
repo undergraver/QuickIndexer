@@ -70,6 +70,8 @@ def DoMain():
     searchparser.add_argument("--type",required=False,default='glob',choices=['glob','iglob','like','regex','iregex'], help="the type of pattern (glob by default)")
     searchparser.add_argument("pattern",nargs='+',help="the patterns to match")
     searchparser.add_argument("--limit",required=False,type=int,help="the maximum number of results to return")
+    searchparser.add_argument("--offset",required=False,type=int,default=0,help="the offset where the limit starts applying")
+    searchparser.add_argument("--operation",required=False,default='OR',choices=['OR','AND'],help="choose operation between pattern matches (default is OR)")
     searchparser.set_defaults(func=DoSearch)
 
     result = parser.parse_args()
@@ -124,7 +126,7 @@ def DoConfigDelete(args):
 
 def DoSearch(args):
     import Query
-    files = Query.Search(args.file, args.type, args.pattern, args.limit )
+    files = Query.Search(args.file, args.type, args.pattern, args.limit, args.offset, args.operation )
 
     for file in files:
         print file
